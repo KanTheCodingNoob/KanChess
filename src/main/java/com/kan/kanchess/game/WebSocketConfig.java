@@ -10,14 +10,15 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
-	@Override
-	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(myHandler(), "/ws/chess")
-				.setAllowedOriginPatterns("*"); // Change before deployment
+	private final ChessWebSocketHandler handler;
+
+	public WebSocketConfig(ChessWebSocketHandler handler) {
+		this.handler = handler;
 	}
 
-	@Bean
-	public ChessWebSocketHandler myHandler() {
-		return new ChessWebSocketHandler();
+	@Override
+	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+		registry.addHandler(handler, "/ws/chess")
+				.setAllowedOriginPatterns("*"); // Change before deployment
 	}
 }
