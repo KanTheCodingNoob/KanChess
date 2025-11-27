@@ -32,51 +32,55 @@ public class Game {
 		this.startTime = LocalDateTime.now();
 		this.mapper = mapper;
 
-		Map<String, Object> payload1 = new HashMap<>();
-		payload1.put("type", MessageType.INIT_GAME);
-		payload1.put("color", "white");
+		ObjectNode node1 = mapper.createObjectNode();
+		node1.put("type", MessageType.INIT_GAME);
+		node1.put("color", "white");
 		try {
-			player1.socket.sendMessage(new TextMessage(mapper.writeValueAsString(payload1)));
+			player1.socket.sendMessage(new TextMessage(mapper.writeValueAsString(node1)));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 
-		Map<String, Object> payload2 = new HashMap<>();
-		payload2.put("type", MessageType.INIT_GAME);
-		payload2.put("color", "black");
+		ObjectNode node2 = mapper.createObjectNode();
+		node2.put("type", MessageType.INIT_GAME);
+		node2.put("color", "black");
 
 		try {
-			player2.socket.sendMessage(new TextMessage(mapper.writeValueAsString(payload2)));
+			player2.socket.sendMessage(new TextMessage(mapper.writeValueAsString(node2)));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public void makeMove(Player player, MoveDetail moveDetail) {
-		System.out.println(0);
+	public void makeMove(Player player, MessageContent content) {
 		// Validate if it is the player turn or not
 		boolean whiteToMove = (this.moves.size() % 2 == 0);
 		System.out.println(whiteToMove);
 		if (whiteToMove && !player.socket.equals(this.player1.socket)) {
-			System.out.println(1);
 			return;
 		}
 
 		if (!whiteToMove && !player.socket.equals(this.player2.socket)) {
-			System.out.println(2);
 			return;
 		}
 
-		System.out.println(moveDetail.toString());
-
+		// Check if the move made is legal or not
 		Move legalMove = board.legalMoves().stream()
-				.filter(m -> m.getFrom().value().equals(moveDetail.from().toUpperCase()) &&
-						m.getTo().value().equals(moveDetail.to().toUpperCase()))
+				.filter(m -> m.getFrom().value().equals(content.move().from().toUpperCase()) &&
+						m.getTo().value().equals(content.move().to().toUpperCase()))
 				.findFirst()
 				.orElse(null);
 
 		if (legalMove == null) {
-			System.out.println(3);
+			ObjectNode node = mapper.createObjectNode();
+			node.put("type", MessageType.ILLEGAL);
+			String jsonMessage = mapper.writeValueAsString(node);
+
+			try {
+				player.socket.sendMessage(new TextMessage(jsonMessage));
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 			return;
 		}
 
@@ -106,21 +110,18 @@ public class Game {
 			return;
 		}
 
-		String moveInJson = mapper.writeValueAsString(moveDetail); // Convert move to json
-		// Add a new field type to the json content
-		ObjectNode node = (ObjectNode) mapper.readTree(moveInJson);
-		node.put("type", MessageType.MOVE);
-		String updatedJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(node);
+		// Send the move to other player
+		String messageToOtherPlayerInJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(content);
 
 		if (this.moves.size() % 2 == 0) {
 			try {
-				this.player1.socket.sendMessage(new TextMessage(updatedJson));
+				this.player1.socket.sendMessage(new TextMessage(messageToOtherPlayerInJson));
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
 		} else {
 			try {
-				this.player2.socket.sendMessage(new TextMessage(updatedJson));
+				this.player2.socket.sendMessage(new TextMessage(messageToOtherPlayerInJson));
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
