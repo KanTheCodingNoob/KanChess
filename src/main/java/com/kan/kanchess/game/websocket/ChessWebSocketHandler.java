@@ -1,5 +1,6 @@
-package com.kan.kanchess.game;
+package com.kan.kanchess.game.websocket;
 
+import com.kan.kanchess.game.service.GameManager;
 import org.jspecify.annotations.NullMarked;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -17,18 +18,10 @@ public class ChessWebSocketHandler extends TextWebSocketHandler {
 	}
 
 	@Override
-	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		System.out.println("Connected: " + session.getId());
-	}
-
-	@Override
 	public void handleTextMessage(WebSocketSession session, TextMessage message)
 			throws Exception {
 		gameManager.addUser(session, message);
 		System.out.println("Received: " + message.getPayload());
-
-		// Echo back or broadcast
-		session.sendMessage(new TextMessage("Server: " + message.getPayload()));
 	}
 
 	@Override
