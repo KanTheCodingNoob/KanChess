@@ -3,7 +3,6 @@ package com.kan.kanchess.game.service;
 import com.kan.kanchess.game.model.Game;
 import com.kan.kanchess.game.model.MessageContent;
 import com.kan.kanchess.game.model.MessageType;
-import com.kan.kanchess.game.model.MoveDetail;
 import com.kan.kanchess.game.model.Player;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
@@ -57,7 +56,7 @@ public class GameManager {
 		if (MessageType.MOVE.equals(content.type())) {
 			games.stream()
 					.filter(g -> g.player1.socket.equals(player.socket) || g.player2.socket.equals(player.socket))
-					.findFirst().ifPresent(game -> game.makeMove(player, new MoveDetail(content.move().from(), content.move().to())));
+					.findFirst().ifPresent(game -> game.makeMove(player, content));
 
 		}
 	}
