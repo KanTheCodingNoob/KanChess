@@ -1,4 +1,4 @@
-import PlayButton from "../components/Play/PlayButton.tsx";
+import PlayButton from "../features/play/components/PlayButton.tsx";
 import {Chessboard} from "react-chessboard";
 import {useNavigate} from "react-router";
 

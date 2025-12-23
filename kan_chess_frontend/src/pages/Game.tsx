@@ -1,6 +1,6 @@
 import {useSocket} from "../hooks/useSocket.ts";
-import {Chessboard, type PieceDropHandlerArgs, type PieceHandlerArgs} from "react-chessboard";
-import LoadingScreen from "../components/common/LoadingScreen.tsx";
+import {Chessboard, type PieceDropHandlerArgs} from "react-chessboard";
+import LoadingScreen from "../components/LoadingScreen.tsx";
 import {useEffect, useRef, useState} from "react";
 import {Chess} from "chess.js";
 import {GAME_OVER, MOVE} from "../types/messageTypes.ts";
