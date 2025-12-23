@@ -9,6 +9,7 @@ export default function Game(){
 	const {gameStarted, color, send, lastMessage} = useSocket();
 	const chessGameRef = useRef(new Chess());
 	const chessGame = chessGameRef.current;
+	const [history, setHistory] = useState<string[]>([])
 
 	// track the current position of the chess game in state to trigger a re-render of the chessboard
 	// eslint-disable-next-line react-hooks/refs
@@ -28,10 +29,15 @@ export default function Game(){
 
 			if (result) {
 				setChessPosition(chessGame.fen());
+				setHistory(chessGame.history())
 			}
+
+			return;
 		}
 
 		if (lastMessage.type === GAME_OVER && lastMessage.winner) {
+			setHistory(prev => [...prev, `Winner: ${lastMessage.winner}`])
+			return;
 		}
 
 		// eslint-disable-next-line react-hooks/refs
@@ -77,6 +83,7 @@ export default function Game(){
 
 			// update the position state upon successful move to trigger a re-render of the chessboard
 			setChessPosition(chessGame.fen());
+			setHistory(chessGame.history());
 
 			// return true as the move was successful
 			return true;
@@ -110,12 +117,16 @@ export default function Game(){
 						<Chessboard options={chessboardOptions} />
 					</div>
 				</div>
-				<div className="order-2 h-auto rounded-md bg-neutral-600 overflow-hidden">
+				<div className="order-2 h-auto rounded-md bg-neutral-600 overflow-hidden w-106">
 					<div className="bg-neutral-900 py-5">
 						<h1>Color: {color}</h1>
 					</div>
 					<div className="flex flex-col gap-5 py-4 justify-around px-5">
-
+						{history.map((item, index) => (
+							<div key={index}>
+								{index + 1}. {item}
+							</div>
+						))}
 					</div>
 				</div>
 			</div>
