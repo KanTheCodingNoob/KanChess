@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.kan</groupId>
-    <artifactId>KanChess</artifactId>
+    <artifactId>kan_chess_backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>KanChess</name>
     <description>KanChess</description>

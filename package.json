@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "frontend": "npm run dev --prefix kan_chess_frontend",
-    "backend": "cd KanChess && mvnw.cmd spring-boot:run",
+    "backend": "cd kan_chess_backend && mvnw.cmd spring-boot:run",
     "dev": "concurrently \"npm run backend\" \"npm run frontend\""
   },
   "devDependencies": {
