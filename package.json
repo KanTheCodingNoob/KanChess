@@ -7,6 +7,10 @@
     "dev": "concurrently \"npm run backend\" \"npm run frontend\""
   },
   "devDependencies": {
+    "@tanstack/eslint-plugin-query": "^5.91.2",
     "concurrently": "^9.0.0"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.90.12"
   }
 }
