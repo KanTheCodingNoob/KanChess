@@ -1,5 +1,3 @@
-import {useQueryClient} from "@tanstack/react-query";
-
 type LoginPayload = {
 	username: string;
 	password: string;
