@@ -1,13 +1,15 @@
 services:
   postgres:
-    image: 'postgres:latest'
+    build: ./db
+    container_name: postgres-db
     environment:
-      - 'POSTGRES_DB=KanChessDatabase'
-      - 'POSTGRES_PASSWORD=SecretPassword'
-      - 'POSTGRES_USER=Kan'
+      POSTGRES_DB: KanChessDatabase
+      POSTGRES_USER: Kan
+      POSTGRES_PASSWORD: SecretPassword
     ports:
-      - '5431:5432'
+      - "5431:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
+
 volumes:
   db-data:
