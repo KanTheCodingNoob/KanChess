@@ -1,5 +1,7 @@
+import {BACKEND_HTTP} from "../../../config/backend.ts";
+
 export async function fetchMe() {
-	const res = await fetch("/auth/me", {
+	const res = await fetch(`${BACKEND_HTTP}/auth/me`, {
 		credentials: "include",
 		headers: {
 			Authorization: `Bearer ${localStorage.getItem("accessToken")}`,

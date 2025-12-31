@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import {INIT_GAME} from "../types/messageTypes.ts";
 import type {MessageContent} from "../types/messageContent.ts";
+import {BACKEND_WS} from "../config/backend.ts";
 
-const wsURL = import.meta.env.VITE_BACKEND_WS ?? "ws://localhost:8080";
+// const wsURL = import.meta.env.VITE_BACKEND_WS ?? "ws://localhost:8080";
 
 export function useSocket() {
 	const socketRef = useRef<WebSocket | null>(null);
@@ -14,7 +15,7 @@ export function useSocket() {
 
 	useEffect(() => {
 		console.log("🟢 useSocket mounted");
-		const ws = new WebSocket(wsURL);
+		const ws = new WebSocket(`${BACKEND_WS}`);
 		socketRef.current = ws;
 
 		ws.onopen = () => {

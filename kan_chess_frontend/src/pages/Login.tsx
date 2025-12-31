@@ -32,7 +32,8 @@ export default function Login() {
 			</button>
 			<button className="cursor-pointer" onClick={()=> navigate("/")}><h1>Not a Logo</h1></button>
 			<div className="w-120 h-100 bg-neutral-900 flex flex-col items-center p-10 rounded-md shadow-lg">
-				<form className="w-full h-full flex flex-col items-center p-5 gap-5">
+				<form className="w-full h-full flex flex-col items-center p-5 gap-5"
+				      onSubmit={(e) => handleSubmit(e)}>
 					<input type="text"
 					       id="username"
 					       name="username"
@@ -61,8 +62,6 @@ export default function Login() {
 						<button
 							type="button"
 							className="text-blue-400 hover:text-blue-300 hover:underline transition"
-							onClick={(event) => handleSubmit(event)
-							}
 						>
 							Forgot password?
 						</button>
