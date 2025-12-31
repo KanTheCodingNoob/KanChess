@@ -1,10 +1,14 @@
 package com.kan.kanchess.auth.service;
 
+import com.kan.kanchess.auth.dto.LoginResponse;
 import com.kan.kanchess.auth.model.User;
 import com.kan.kanchess.auth.repository.UserRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,14 +35,19 @@ public class UserService {
 		return userRepository.save(user);
 	}
 
-	public String verify(String username, String password) {
+	public ResponseEntity<LoginResponse> verify(String username, String password) {
 		Authentication authentication =
-				authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+				authenticationManager.authenticate(
+						new UsernamePasswordAuthenticationToken(
+								username,
+								password));
 
-		if(authentication.isAuthenticated()) {
-			return jwtService.generateToken(username);
+		if(!authentication.isAuthenticated()) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 
-		return "fail";
+		String token = jwtService.generateToken(username);
+
+		return ResponseEntity.ok(new LoginResponse(token));
 	}
 }

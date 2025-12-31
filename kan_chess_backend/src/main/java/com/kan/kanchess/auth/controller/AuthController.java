@@ -1,15 +1,19 @@
 package com.kan.kanchess.auth.controller;
 
 import com.kan.kanchess.auth.dto.LoginRequest;
+import com.kan.kanchess.auth.dto.LoginResponse;
 import com.kan.kanchess.auth.dto.RegisterRequest;
+import com.kan.kanchess.auth.dto.UserDTO;
 import com.kan.kanchess.auth.model.User;
+import com.kan.kanchess.auth.model.UserPrincipal;
 import com.kan.kanchess.auth.service.UserService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/auth")
 public class AuthController {
 
@@ -27,10 +31,15 @@ public class AuthController {
 	}
 
 	@PostMapping("/login")
-	public String login(@RequestBody LoginRequest request) {
+	public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
 		String username = request.getUsername();
 		String password = request.getPassword();
 
 		return userService.verify(username, password);
+	}
+
+	@GetMapping("/me")
+	public UserPrincipal me(@AuthenticationPrincipal UserPrincipal principal) {
+		return principal;
 	}
 }
