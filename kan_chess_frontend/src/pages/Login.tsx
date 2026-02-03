@@ -74,7 +74,7 @@ export default function Login() {
 					<input type="submit"
 					       value={loginMutation.isPending ? "Logging in..." : "Login"}
 					       disabled={loginMutation.isPending}
-					       className="cursor-pointer bg-blue-500 hover:bg-blue-700 transition duration-300 w-full h-full mt-12 rounded-md disabled:opacity-50"/>
+					       className="cursor-pointer bg-blue-500 hover:bg-blue-700 transition duration-300 w-full h-12 mt-auto rounded-md disabled:opacity-50"/>
 				</form>
 			</div>
 		</div>
