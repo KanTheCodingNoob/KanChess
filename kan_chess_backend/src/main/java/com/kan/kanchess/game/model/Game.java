@@ -1,12 +1,13 @@
 package com.kan.kanchess.game.model;
 
+import com.kan.kanchess.game.dto.MessageContent;
+import com.kan.kanchess.game.dto.MessageType;
 import com.github.bhlangonijr.chesslib.Board;
 import com.github.bhlangonijr.chesslib.Square;
 import com.github.bhlangonijr.chesslib.move.Move;
 import com.github.bhlangonijr.chesslib.move.MoveList;
 import org.springframework.web.socket.TextMessage;
 import tools.jackson.databind.ObjectMapper;
-import tools.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -33,22 +34,18 @@ public class Game {
 		this.mapper = mapper;
 
 		// Send to player 1 game is staring and their color (white)
-		ObjectNode node1 = mapper.createObjectNode();
-		node1.put("type", MessageType.INIT_GAME);
-		node1.put("color", "white");
+		MessageContent message1 = new MessageContent(MessageType.INIT_GAME, null, "white", null);
 		try {
-			player1.socket.sendMessage(new TextMessage(mapper.writeValueAsString(node1)));
+			player1.socket.sendMessage(new TextMessage(mapper.writeValueAsString(message1)));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 
 		// Send to player 2 game is staring and their color (black)
-		ObjectNode node2 = mapper.createObjectNode();
-		node2.put("type", MessageType.INIT_GAME);
-		node2.put("color", "black");
+		MessageContent message2 = new MessageContent(MessageType.INIT_GAME, null, "black", null);
 
 		try {
-			player2.socket.sendMessage(new TextMessage(mapper.writeValueAsString(node2)));
+			player2.socket.sendMessage(new TextMessage(mapper.writeValueAsString(message2)));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -75,12 +72,9 @@ public class Game {
 
 		// Illegal move
 		if (legalMove == null) {
-			ObjectNode node = mapper.createObjectNode();
-			node.put("type", MessageType.ILLEGAL);
-			String jsonMessage = mapper.writeValueAsString(node);
-
+			MessageContent illegalMessage = new MessageContent(MessageType.ILLEGAL, null, null, null);
 			try {
-				player.socket.sendMessage(new TextMessage(jsonMessage));
+				player.socket.sendMessage(new TextMessage(mapper.writeValueAsString(illegalMessage)));
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
@@ -92,20 +86,17 @@ public class Game {
 
 		// Check if game is over
 		if (this.board.isMated()) {
-			ObjectNode node = mapper.createObjectNode();
-			node.put("type", MessageType.GAME_OVER);
-			node.put("winner", whiteToMove ? "black" : "white");
-
-			String jsonMessage = mapper.writeValueAsString(node);
-
-			try {
-				this.player1.socket.sendMessage(new TextMessage(jsonMessage));
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
+			MessageContent gameOverMessage = new MessageContent(
+					MessageType.GAME_OVER,
+					null,
+					null,
+					whiteToMove ? "black" : "white"
+			);
 
 			try {
+				String jsonMessage = mapper.writeValueAsString(gameOverMessage);
 				this.player1.socket.sendMessage(new TextMessage(jsonMessage));
+				this.player2.socket.sendMessage(new TextMessage(jsonMessage));
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
@@ -114,20 +105,16 @@ public class Game {
 		}
 
 		// Send the move to other player
-		String messageToOtherPlayerInJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(content);
+		try {
+			String messageToOtherPlayerInJson = mapper.writeValueAsString(content);
 
-		if (this.moves.size() % 2 == 0) {
-			try {
+			if (this.moves.size() % 2 == 0) {
 				this.player1.socket.sendMessage(new TextMessage(messageToOtherPlayerInJson));
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-		} else {
-			try {
+			} else {
 				this.player2.socket.sendMessage(new TextMessage(messageToOtherPlayerInJson));
-			} catch (IOException e) {
-				throw new RuntimeException(e);
 			}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 	}
 }

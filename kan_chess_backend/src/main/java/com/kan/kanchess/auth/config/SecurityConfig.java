@@ -48,7 +48,8 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers(
 								"/auth/login",
-								"/auth/register"
+								"/auth/register",
+								"/ws/**"
 								).permitAll()
 						.anyRequest().authenticated()
 				)
@@ -83,7 +84,8 @@ public class SecurityConfig {
 		CorsConfiguration configuration = new CorsConfiguration();
 
 		configuration.setAllowedOrigins(List.of(
-				"http://localhost:5173"   // Vite / React
+				"http://localhost:5173",   // Vite / React
+				"https://hoppscotch.io"
 				// add production domain later
 		));
 
