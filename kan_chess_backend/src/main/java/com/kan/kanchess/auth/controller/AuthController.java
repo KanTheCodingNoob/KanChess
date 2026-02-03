@@ -1,9 +1,6 @@
 package com.kan.kanchess.auth.controller;
 
-import com.kan.kanchess.auth.dto.LoginRequest;
-import com.kan.kanchess.auth.dto.LoginResponse;
-import com.kan.kanchess.auth.dto.RegisterRequest;
-import com.kan.kanchess.auth.dto.UserDTO;
+import com.kan.kanchess.auth.dto.*;
 import com.kan.kanchess.auth.model.User;
 import com.kan.kanchess.auth.model.UserPrincipal;
 import com.kan.kanchess.auth.service.UserService;
@@ -25,8 +22,8 @@ public class AuthController {
 	}
 
 	@PostMapping("/register")
-	public User register(@RequestBody RegisterRequest registerRequest) {
-		User user = new User(registerRequest.getUsername(), registerRequest.getPassword(), registerRequest.getEmail());
+	public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest registerRequest) {
+		User user = new User(registerRequest.getUsername(), registerRequest.getEmail(), registerRequest.getPassword());
 		return userService.register(user);
 	}
 

@@ -1,10 +1,10 @@
 package com.kan.kanchess.auth.dto;
 
-public class LoginResponse {
+public class RegisterResponse {
 	private String accessToken;
 	private UserDTO user;
 
-	public LoginResponse(String accessToken, UserDTO user) {
+	public RegisterResponse(String accessToken, UserDTO user) {
 		this.accessToken = accessToken;
 		this.user = user;
 	}
