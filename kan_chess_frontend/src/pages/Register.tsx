@@ -1,16 +1,25 @@
 import {useNavigate} from "react-router";
 import {useState, type FormEvent, type ChangeEvent} from "react";
+import {useRegister} from "../features/auth/hooks/useRegister.ts";
 
 export default function Register() {
 	const navigate = useNavigate();
 	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const registerMutation = useRegister();
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
-		// Register function not implemented yet
-		console.log("Registering:", { username, email, password });
+		
+		registerMutation.mutate(
+			{ username, email, password },
+			{
+				onSuccess: () => {
+					navigate("/play");
+				},
+			}
+		);
 	};
 
 	return (
@@ -48,9 +57,14 @@ export default function Register() {
 					       onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
 					/>
 
+					{registerMutation.isError && (
+						<p className="text-red-500 text-sm">{registerMutation.error.message}</p>
+					)}
+
 					<input type="submit"
-					       value="Register"
-					       className="cursor-pointer bg-blue-500 hover:bg-blue-700 transition duration-300 w-full h-full mt-12 rounded-md"/>
+					       value={registerMutation.isPending ? "Registering..." : "Register"}
+					       disabled={registerMutation.isPending}
+					       className="cursor-pointer bg-blue-500 hover:bg-blue-700 transition duration-300 w-full h-full mt-12 rounded-md disabled:opacity-50"/>
 				</form>
 			</div>
 		</div>

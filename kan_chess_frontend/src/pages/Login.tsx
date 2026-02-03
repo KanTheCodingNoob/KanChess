@@ -41,13 +41,17 @@ export default function Login() {
 					       className="w-full p-2 bg-gray-800 rounded-md"
 					       onChange={(e: ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
 					/>
-					<input type="text"
+					<input type="password"
 					       id="password"
 					       name="password"
 					       placeholder="password"
 					       className="w-full p-2 bg-gray-800 rounded-md"
 					       onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
 					/>
+
+					{loginMutation.isError && (
+						<p className="text-red-500 text-sm">{loginMutation.error.message}</p>
+					)}
 
 					<div className="w-full flex items-center justify-between text-sm text-gray-300">
 						<label className="flex items-center gap-2 cursor-pointer">
@@ -68,8 +72,9 @@ export default function Login() {
 					</div>
 
 					<input type="submit"
-					       value="Login"
-					       className="cursor-pointer bg-blue-500 hover:bg-blue-700 transition duration-300 w-full h-full mt-12 rounded-md"/>
+					       value={loginMutation.isPending ? "Logging in..." : "Login"}
+					       disabled={loginMutation.isPending}
+					       className="cursor-pointer bg-blue-500 hover:bg-blue-700 transition duration-300 w-full h-full mt-12 rounded-md disabled:opacity-50"/>
 				</form>
 			</div>
 		</div>
