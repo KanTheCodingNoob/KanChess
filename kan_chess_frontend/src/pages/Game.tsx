@@ -3,7 +3,7 @@ import {Chessboard, type PieceDropHandlerArgs} from "react-chessboard";
 import LoadingScreen from "../components/LoadingScreen.tsx";
 import {useEffect, useRef, useState} from "react";
 import {Chess} from "chess.js";
-import {GAME_OVER, MOVE} from "../types/messageTypes.ts";
+import {GAME_OVER, MOVE} from "../types/dto/messageTypes.ts";
 
 export default function Game(){
 	const {gameStarted, color, send, lastMessage} = useSocket();
