@@ -3,7 +3,6 @@ package com.kan.kanchess.game.model;
 import com.kan.kanchess.game.dto.MessageContent;
 import com.kan.kanchess.game.dto.MessageType;
 import com.github.bhlangonijr.chesslib.Board;
-import com.github.bhlangonijr.chesslib.Square;
 import com.github.bhlangonijr.chesslib.move.Move;
 import com.github.bhlangonijr.chesslib.move.MoveList;
 import org.springframework.web.socket.TextMessage;
@@ -11,10 +10,6 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 public class Game {
 	public final Player player1;
