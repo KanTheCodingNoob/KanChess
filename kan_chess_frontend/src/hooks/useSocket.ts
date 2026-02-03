@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import {INIT_GAME} from "../types/messageTypes.ts";
-import type {MessageContent} from "../types/messageContent.ts";
+import {INIT_GAME} from "../types/dto/messageTypes.ts";
+import type {MessageContent} from "../types/dto/messageContent.ts";
 import {BACKEND_WS} from "../config/backend.ts";
 
 // const wsURL = import.meta.env.VITE_BACKEND_WS ?? "ws://localhost:8080";
