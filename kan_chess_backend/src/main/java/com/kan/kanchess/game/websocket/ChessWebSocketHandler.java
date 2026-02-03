@@ -2,6 +2,7 @@ package com.kan.kanchess.game.websocket;
 
 import com.kan.kanchess.game.service.GameManager;
 import org.jspecify.annotations.NullMarked;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -15,6 +16,12 @@ public class ChessWebSocketHandler extends TextWebSocketHandler {
 
 	public ChessWebSocketHandler(GameManager gameManager) {
 		this.gameManager = gameManager;
+	}
+
+	@Override
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+		UserDetails user = (UserDetails) session.getAttributes().get("user");
+		System.out.println("Connected user: " + user.getUsername());
 	}
 
 	@Override

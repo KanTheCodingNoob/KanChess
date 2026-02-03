@@ -10,10 +10,16 @@ export function useSocket() {
 	const [color, setColor] = useState<"white" | "black" | undefined>(undefined);
 	const [lastMessage, setLastMessage] = useState<MessageContent>();
 	const [connected, setConnected] = useState(false);
+	const token = localStorage.getItem("accessToken");
 
 	useEffect(() => {
+		if (!token) {
+			console.error("❌ No token found, skipping WebSocket connection");
+			return;
+		}
+
 		console.log("🟢 useSocket mounted");
-		const ws = new WebSocket(`${BACKEND_WS}`);
+		const ws = new WebSocket(`${BACKEND_WS}?token=${token}`);
 		socketRef.current = ws;
 
 		ws.onopen = () => {
@@ -24,13 +30,17 @@ export function useSocket() {
 		};
 
 		ws.onmessage = (event) => {
-			const message: MessageContent = JSON.parse(event.data);
-			console.log("📩 Message from server:", message);
-			setLastMessage(message)
+			try {
+				const message: MessageContent = JSON.parse(event.data);
+				console.log("📩 Message from server:", message);
+				setLastMessage(message)
 
-			if (message.type === "init_game") {
-				setGameStarted(true);
-				setColor(message.color);
+				if (message.type === "init_game") {
+					setGameStarted(true);
+					setColor(message.color);
+				}
+			} catch (e) {
+				console.error("❌ Error parsing message:", e);
 			}
 		};
 

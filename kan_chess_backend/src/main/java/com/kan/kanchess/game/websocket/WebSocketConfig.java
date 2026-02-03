@@ -10,14 +10,17 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 public class WebSocketConfig implements WebSocketConfigurer {
 
 	private final ChessWebSocketHandler handler;
+	private final JwtHandshakeInterceptor interceptor;
 
-	public WebSocketConfig(ChessWebSocketHandler handler) {
+	public WebSocketConfig(ChessWebSocketHandler handler, JwtHandshakeInterceptor interceptor) {
 		this.handler = handler;
+		this.interceptor = interceptor;
 	}
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		registry.addHandler(handler, "/ws")
+				.addInterceptors(interceptor)
 				.setAllowedOriginPatterns("*");
 	}
 }
