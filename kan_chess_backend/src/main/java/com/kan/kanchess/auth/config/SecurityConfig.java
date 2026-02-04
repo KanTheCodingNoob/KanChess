@@ -85,6 +85,7 @@ public class SecurityConfig {
 
 		configuration.setAllowedOrigins(List.of(
 				"http://localhost:5173",   // Vite / React
+				"http://localhost:3000",
 				"https://hoppscotch.io"
 				// add production domain later
 		));

@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  postgres:
+    build: ./kan_chess_backend/db
+    environment:
+      POSTGRES_DB: KanChessDatabase
+      POSTGRES_USER: Kan
+      POSTGRES_PASSWORD: SecretPassword
+    ports:
+      - "5431:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: ./kan_chess_backend
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/KanChessDatabase
+      SPRING_DATASOURCE_USERNAME: Kan
+      SPRING_DATASOURCE_PASSWORD: SecretPassword
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build: ./kan_chess_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
