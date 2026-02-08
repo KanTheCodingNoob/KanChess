@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +16,8 @@ import java.util.Map;
 @Service
 public class JwtService {
 
-	private static String SECRET_KEY =
-			"tZEMG+/I/1ZpsxutE6Yn4taatq1QR1mQ3TjJ9hiV3x4=";
+	@Value("${app.jwt.key}")
+	private String SECRET_KEY;
 
 	private static final long EXPIRATION_MS = 1000 * 60 * 60 * 24 * 7; // 1 week
 
